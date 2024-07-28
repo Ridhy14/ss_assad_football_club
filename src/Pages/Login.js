@@ -3,17 +3,21 @@ import '../Pages/Login.css'
 import Navbar from '../Components/Navbar/Navbar'
 import { auth } from '../Components/Firebase/Firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
   const [name,setName] = useState('');
+  const [error, setError] = useState(null);
+  const navigate = useNavigate(); 
 
-  const signIn=(e) =>{
+  const signIn= async(e) =>{
     e.preventDefault();
-    signInWithEmailAndPassword(auth,email,password)
+    await signInWithEmailAndPassword(auth,email,password)
     .then((userCredential) =>{
       console.log(userCredential)
+      navigate("/shop");
     }).catch((error) =>{
       console.log(error);
     }
@@ -21,7 +25,6 @@ const Login = () => {
   }
   return (
    <div className='Loginsignup'>
-    <Navbar></Navbar>
     <div className='Loginsignup-container'>
     <form onSubmit={signIn}>
       <h1>Log In</h1>
@@ -40,6 +43,7 @@ const Login = () => {
          />
       </div>
       <button type='submit' className='btn'>Sign In</button>
+      {error && <p className='error'>{error}</p>}
       <p className='Loginsignup-login'>Do not have an account? 
         <span><a href='Register'>Sign Up</a></span></p>
         </form>

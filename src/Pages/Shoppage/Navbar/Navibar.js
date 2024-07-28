@@ -1,11 +1,25 @@
 import React from 'react'
 import './Navibar.css'
+import { auth } from '../../../Components/Firebase/Firebase'
 import logo from '../../Assets/logor.jpeg'
 import cart_icon from '../../Assets/cart_icon.png'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 const Navibar = () => {
+  const navigate = useNavigate();
 
   const [menu, setMenu] = React.useState("shop");
+
+  const handleLogout = () => {
+    auth.signOut()
+      .then(() => {
+        navigate("/Login");;
+      })
+      .catch((error) => {
+        console.error('Error signing out: ', error);
+      });
+  };
+
   return (
     <div className='navibar'>
       <div className='navi-logo'>
@@ -20,7 +34,7 @@ const Navibar = () => {
         <li onClick={() =>{setMenu("womens")}}><Link to='/womens'>Women</Link>{menu==="womens"?<hr/>:<></>}</li>
      </ul>
      <div className='navi-login-cart'>
-        <button>Login</button>
+        <button onClick={handleLogout}>Logout</button>
         <Link to='/Cart'><img src={cart_icon} alt=''/></Link>
         <div className='navi-cart-count'>0</div>
      </div>
